@@ -57,4 +57,35 @@ export class EmployeeService {
             data: data
         });
     }
+
+    /**
+     * Deletes an employee by ID.
+     * @param {int} id - The ID of the employee to be deleted.
+     * @returns A promise that resolves to the deleted employee.
+     */
+    delete(id: number): Promise<Employee> {
+        return this.prisma.employee.delete({
+            where: {
+                id: id
+            }
+        });
+    }
+
+    /**
+     * Checks if an employee exists by ID.
+     * @param {int} id - The ID of the employee.
+     * @returns A promise that resolves to a boolean indicating if the employee exists.
+     * @throws Error if the ID is not a number.
+     */
+    async exists(id: number): Promise<boolean> {
+        if (isNaN(id)) {
+            throw new Error('Invalid ID must be a number.');
+        }
+        const employee = await this.prisma.employee.findUnique({
+            where: {
+                id: id
+            }
+        });
+        return !!employee;
+    }
 }
