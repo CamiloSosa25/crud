@@ -9,11 +9,47 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
-
 model Employee {
   id        Int      @id @default(autoincrement())
   name      String
-  email     String
+  email     String   @unique
+  paymentType String // "hourly" or "salary" TODO: enum or separate table
+  paymentAmount Float
+  companyId Int
+  company   Company  @relation(fields: [companyId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  timesheets Timesheet[]
+}
+
+model Timesheet {
+  id          Int      @id @default(autoincrement())
+  date        DateTime
+  hours       Int?     // Nullable, only for hourly employees
+  grossPay    Float
+  employeeId  Int
+  employee    Employee @relation(fields: [employeeId], references: [id])
+  status      String   // Example: "Submitted", "Approved", "Rejected" TODO: enum
+  note        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String   // "admin" or "client" TODO: create roles
+  companyId Int?
+  company   Company? @relation(fields: [companyId], references: [id])
+}
+
+model Company {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  employees Employee[]
+  users     User[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
