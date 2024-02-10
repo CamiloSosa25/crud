@@ -2,10 +2,12 @@ import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, 
 import { EmployeeService } from "./employee.service";
 import { Employee } from "@prisma/client";
 import { validate } from "class-validator";
+import { ApiTags } from "@nestjs/swagger";
 
 /**
  * Controller for managing employee resources.
  */
+@ApiTags('employee')
 @Controller('employee')
 @UsePipes(new ValidationPipe({ transform: true }))
 export class EmployeeController {
