@@ -31,7 +31,7 @@ export class EmployeeController {
      */
     @Get(':id')
     async getById(@Param('id') id: string): Promise<Employee> {
-        if (isNaN(parseInt(id))) {
+        if (isNaN(Number(id))) {
             throw new BadRequestException('Invalid ID must be a number.');
         }
         const employee = await this.employeeService.getById(Number(id));
@@ -59,8 +59,8 @@ export class EmployeeController {
      */
     @Patch(':id')
     async update(@Param('id') id: string, @Body() data: Employee): Promise<Employee> {
-        if (isNaN(parseInt(id))) {
-            new BadRequestException('Invalid ID must be a number.');
+        if (isNaN(Number(id))) {
+            throw new BadRequestException('Invalid ID must be a number.');
         }
         if (!await this.employeeService.exists(Number(id))) {
             throw new NotFoundException('Employee not found.');
@@ -76,7 +76,7 @@ export class EmployeeController {
      */
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<Employee> {
-        if (isNaN(parseInt(id))) {
+        if (isNaN(Number(id))) {
             new BadRequestException('Invalid ID must be a number.');
         }
         if (!await this.employeeService.exists(Number(id))) {
